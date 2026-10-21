@@ -1,18 +1,43 @@
 
 Vagrant.configure("2") do |config|
 
-  # BASE #
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
+  # BASE SETTINGS FOR ALL MACHINES #
   config.vm.box = "generic/debian12"
   config.vm.box_version = "4.3.12"
   
-  config.vm.provider :libvirt do |v|
-    v.cpus = 1
-    v.memory = 1024
+  # MACHINE 1 :SERVER #
+  config.vm.define "dahmaneS" do |node|
+    node.vm.hostname = "dahmaneS"
+    node.vm.network "private_network", ip: "192.168.56.110"
+
+    node.vm.provider :libvirt do |lv|
+      lv.cpus = 1
+      lv.memory = 1024
+    end
+    #add provision
   end
 
-  # NETWORKING #
+  # MACHINE 2 :WORKER #
+  config.vm.define "dahmaneSW" do |node|
+    node.vm.hostname = "dahmaneSW"
+    node.vm.network "private_network", ip: "192.168.56.111"
+
+    node.vm.provider :libvirt do |lv|
+      lv.cpus = 1
+      lv.memory = 1024
+    end
+    #add provision
+  end
+
+end
+
+
+
+
+# COMMENTS #
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
@@ -23,11 +48,6 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.56.110"
-
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
@@ -68,4 +88,3 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-end
