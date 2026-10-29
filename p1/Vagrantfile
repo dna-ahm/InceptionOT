@@ -2,32 +2,59 @@
 Vagrant.configure("2") do |config|
 
   # BASE SETTINGS FOR ALL MACHINES #
+  # config.vm.box = "debian12-arm64"
+  # config.vm.box_url = "https://app.vagrantup.com/api/v2/box/generic/debian12/version/4.3.12/provider/libvirt/arm64"
   config.vm.box = "generic/debian12"
   config.vm.box_version = "4.3.12"
-  
+
   # MACHINE 1 :SERVER #
   config.vm.define "dahmaneS" do |node|
     node.vm.hostname = "dahmaneS"
     node.vm.network "private_network", ip: "192.168.56.110"
 
     node.vm.provider :libvirt do |lv|
+      lv.cpu_mode = "host-passthrough"
       lv.cpus = 1
       lv.memory = 1024
+      lv.machine_type = "virt"
+      lv.machine_arch = "aarch64"
+
+      # Clears the conflicting ACPI/APIC features on ARM
+      lv.features = []
+      # uefi loader for arm64
+      lv.loader = "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd"
+      # Keep software emulation if /dev/kvm is not accessible:
+      lv.driver = "qemu" unless File.exist?("/dev/kvm")
+
+      # lv.usb_controller = true
+      # lv.input :type => "mouse", :bus => "usb"
+      # lv.input :type => "keyboard", :bus => "usb"
+      # Headless: disable graphics, video, and default inputs
+      lv.usb_controller :model => "qemu-xhci"
+      lv.input :type => "mouse", :bus => "usb"
+      lv.input :type => "keyboard", :bus => "usb"
+      # lv.graphics_type = "none"
+      # lv.video_type = "none"
     end
     #add provision
   end
 
   # MACHINE 2 :WORKER #
-  config.vm.define "dahmaneSW" do |node|
-    node.vm.hostname = "dahmaneSW"
-    node.vm.network "private_network", ip: "192.168.56.111"
+  # config.vm.define "dahmaneSW" do |node|
+  #   node.vm.hostname = "dahmaneSW"
+  #   node.vm.network "private_network", ip: "192.168.56.111"
 
-    node.vm.provider :libvirt do |lv|
-      lv.cpus = 1
-      lv.memory = 1024
-    end
-    #add provision
-  end
+  #   node.vm.provider :libvirt do |lv|
+  #     lv.cpus = 1
+  #     lv.memory = 1024
+
+  #     # uefi loader for arm64
+  #     lv.loader = "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd"
+  #     # Keep software emulation if /dev/kvm is not accessible:
+  #     lv.driver = "qemu" unless File.exist?("/dev/kvm")
+  #   end
+  #   #add provision
+  # end
 
 end
 
