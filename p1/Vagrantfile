@@ -1,8 +1,14 @@
 arm = RbConfig::CONFIG['host_cpu'] =~ /arm|aarch64/
 
 NODES = {
-  "dahmaneS"  => "192.168.56.110",
-  "dahmaneSW" => "192.168.56.111"
+  "dahmaneS" => {
+    ip: "192.168.56.110",
+    script: "scripts/server.sh"
+  },
+  "dahmaneSW" => {
+    ip: "192.168.56.111",
+    script: "scripts/worker.sh"
+  }
 }
 
 Vagrant.configure("2") do |config|
@@ -14,10 +20,10 @@ Vagrant.configure("2") do |config|
     config.vm.box_version = "4.3.12"
   end
 
-  NODES.each do |name, ip|
+  NODES.each do |name, details|
     config.vm.define name do |node|
       node.vm.hostname = name
-      node.vm.network "private_network", ip: ip
+      node.vm.network "private_network", ip: details[:ip]
 
       node.vm.provider :virtualbox do |vb|
         vb.name   = name
@@ -31,7 +37,8 @@ Vagrant.configure("2") do |config|
         v.vmx["memsize"]     = "1024"
       end
 
-      # node.vm.provision "shell", path: "scripts/#{name}.sh"
+      node.vm.provision "shell", path: details[:script]
+
     end
   end
 end
