@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata: # organizational data
+  name: app1
+  labels:
+    app: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # to match with template data : tells deployment which pods belong to it, like a detector
+      app: app1
+  template: # stamps the each pod from this deployment with this tag
+    metadata:
+      labels:
+        app: app1 # that one
+    spec:
+      containers:
+        - name: app1
+          image: nginxdemos/hello:plain-text
+          ports:
+            - containerPort: 80 # port the process inside the container is listening on
+              protocol: TCP
