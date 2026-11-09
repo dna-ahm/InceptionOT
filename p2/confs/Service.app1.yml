@@ -13,4 +13,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80 # Port the service is listening on
-      targetPort: 80 # Port the container is listening on
+      targetPort: 5678 # Port the container is listening on

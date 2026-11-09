@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata: # organizational data
+  name: app3
+  labels:
+    app: app3
+spec:
+  replicas: 1
+  selector:
+    matchLabels: # to match with template data : tells deployment which pods belong to it, like a detector
+      app: app3
+  template: # stamps the each pod from this deployment with this tag
+    metadata:
+      labels:
+        app: app3 # that one
+    spec:
+      containers:
+        - name: app3
+          image: hashicorp/http-echo:latest
+          args:
+          - "-text=Greetings from App 3!"
+          ports:
+            - containerPort: 5678 # port the process inside the container is listening on
+              protocol: TCP

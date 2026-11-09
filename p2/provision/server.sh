@@ -47,7 +47,11 @@ echo "export KUBECONFIG=/home/vagrant/.kube/config" >> /home/vagrant/.bashrc
 kubectl apply -f /vagrant/confs/Deployment.app1.yml
 kubectl apply -f /vagrant/confs/Service.app1.yml
 
+kubectl apply -f /vagrant/confs/Deployment.app2.yml
+kubectl apply -f /vagrant/confs/Service.app2.yml
 
+kubectl apply -f /vagrant/confs/Deployment.app3.yml
+kubectl apply -f /vagrant/confs/Service.app3.yml
 
 # Load balancer
 kubectl apply -f /vagrant/confs/Ingress.yml
